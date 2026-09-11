@@ -1,0 +1,112 @@
+PANDUAN eSPJ-Kontribusi — GitHub Pages + Supabase
+==================================================
+Versi statis (index.html) dengan backend database Supabase.
+Identik dengan platform lengkap: formulir "Data Pelatihan" -> 9 dokumen SPJ F4 otomatis.
+
+ISI PAKET
+---------
+1. index.html                  -> aplikasi lengkap dalam SATU file (frontend)
+2. supabase-schema.sql         -> skema database + data awal (backend)
+3. PANDUAN-GITHUB-SUPABASE.txt -> file ini
+
+=========================== A. SIAPKAN SUPABASE (±10 menit) ===========================
+1. Buka https://supabase.com -> Sign up / Login (gratis)
+2. "New project" -> beri nama, mis. espj-kontribusi
+   - Database Password: simpan baik-baik (tidak dipakai aplikasi, hanya admin)
+   - Region: pilih Singapore (terdekat)
+3. Tunggu project selesai dibuat (±2 menit)
+4. Buka menu "SQL Editor" -> "New query"
+   - Salin SELURUH isi file supabase-schema.sql -> klik "Run"
+   - Selesai: 4 tabel terbentuk (kegiatan, participant, pejabat, pengaturan)
+     beserta data contoh 5 kegiatan dari file Excel
+5. Ambil kredensial: Project Settings (ikon gerigi) -> "API"
+   - Project URL      : https://xxxxxxxx.supabase.co
+   - anon / public key: (teks panjang diawali eyJ...)
+
+====================== B. SIAPKAN GITHUB PAGES (±5 menit) ======================
+1. Login https://github.com -> klik "+" (kanan atas) -> "New repository"
+   - Repository name: espj-kontribusi (bebas)
+   - Visibility: Public (wajib untuk GitHub Pages gratis)
+   - Klik "Create repository"
+2. Klik "uploading an existing file" (atau Add file -> Upload files)
+3. Upload file: index.html  (cukup ini saja; sql tidak wajib diunggah)
+4. Klik "Commit changes"
+5. Aktifkan Pages: Settings -> Pages (menu kiri) ->
+   "Branch" pilih main + / (root) -> Save
+6. Tunggu 1-3 menit, lalu buka:
+   https://USERNAME.github.io/espj-kontribusi/
+   (alamat lengkap tampil di bagian Settings -> Pages)
+
+====================== C. HUBUNGKAN APLIKASI KE SUPABASE ======================
+Ada 2 cara — pilih salah satu:
+
+CARA 1 (disarankan, tanpa edit file):
+1. Buka alamat GitHub Pages Anda
+2. Klik tombol status di KANAN ATAS (bertuliskan "Mode Demo")
+3. Tempel Project URL dan anon key -> "Simpan & Uji"
+4. Badge berubah hijau "Supabase terhubung" -> data Excel langsung muncul
+   (konfigurasi tersimpan di browser; ulangi sekali saja per komputer)
+
+CARA 2 (via edit file):
+1. Edit index.html di GitHub (ikon pensil)
+2. Cari baris:  const SUPABASE_CONFIG = {
+3. Isi URL & anon key di antara tanda kutip -> Commit changes
+
+CATATAN: Sebelum koneksi diisi, aplikasi otomatis berjalan dalam
+"Mode Demo" (data tersimpan di browser) sehingga bisa langsung dicoba
+dan dicetak tanpa konfigurasi apa pun.
+
+========================== D. FITUR APLIKASI ==========================
+- Dashboard          : statistik nilai kontribusi, peserta, PPh 23, kelengkapan BA
+- Data Pelatihan     : formulir master 6 tab (pengganti sheet "Data Pelatihan")
+  1. Kegiatan  2. Vendor  3. Invoice & Rekening  4. Berita Acara
+  5. Nilai & Pajak (jumlah biaya & PPh23 & terbilang otomatis)
+  6. Peserta Penggantian (baris sheet "Daftar Pembayaran Penggantian U")
+- Dokumen SPJ (F4)   : 9 dokumen terisi otomatis dari formulir:
+  Cover, BAP, BAST, BA Pembayaran, BA Bermaterai, Bukti Pengeluaran (Bend. 20),
+  Lembar Disposisi, Daftar Pembayaran Penggantian Uang (F4 landscape),
+  Surat Pernyataan PA/PPTK
+- Pejabat & Pengaturan: kop surat, program/kegiatan, kode rekening, data pejabat
+
+========================== E. MENCETAK F4 ==========================
+1. Menu "Dokumen SPJ (F4)" -> pilih kegiatan & dokumen -> "Cetak F4"
+2. Pada dialog printer:
+   - Paper size : F4 / Folio / Legal (215 x 330 mm)
+   - Margins    : Default / None
+   - Scale      : 100 (jangan "Fit to page")
+   - Matikan "Headers and footers"
+3. Daftar Pembayaran otomatis landscape (330 x 215 mm)
+
+Tips bila printer tidak punya ukuran F4: pilih Legal lalu atur
+skala 100%; ukuran F4 sedikit lebih panjang dari Legal.
+
+========================== F. KEAMANAN DATA ==========================
+- anon key pada Supabase memang bersifat publik (dipakai dari browser),
+  yang menjaga keamanan adalah Row Level Security (sudah diaktifkan).
+- Konfigurasi default membuka akses penuh agar aplikasi internal
+  dapat langsung dipakai tanpa login. Untuk memperketat:
+  aktifkan Supabase Auth (Authentication -> Providers -> Email)
+  lalu sesuaikan policy pada supabase-schema.sql (lihat catatan bawah file).
+- Jangan gunakan service_role key di frontend!
+- Data penting di Supabase otomatis di-backup oleh Supabase (daily backup
+  pada plan berbayar). Untuk plan gratis, unduh cadangan berkala:
+  Database -> Backups -> (atau export via Table Editor).
+
+========================== G. TROUBLESHOOTING ==========================
+Masalah                            Solusi
+---------------------------------  ------------------------------------------
+Badge merah "Koneksi gagal"        Periksa URL/anon key; pastikan
+                                   supabase-schema.sql sudah di-Run
+Data tidak muncul                  Cek SQL Editor: SELECT * FROM kegiatan;
+                                   pastikan tidak kosong (pakai Isi Data Awal)
+"relation ... does not exist"      Schema belum dijalankan -> ulangi langkah A.4
+Dokumen terpotong saat print       Set paper F4/Folio & scale 100%
+RLE/policy error saat Run          Policy sudah ada -> aman diabaikan (idempoten)
+Lupa konfigurasi di komputer lain  Ulangi langkah C (tersimpan per browser)
+
+========================== H. ALUR KERJA HARIAN ==========================
+1. Tambah kegiatan baru  -> menu Data Pelatihan -> Tambah Kegiatan
+2. Isi data selengkap mungkin (nomor BA boleh menyusul)
+3. Buka Dokumen SPJ -> semua dokumen sudah terisi
+4. Cetak F4 sesuai kebutuhan (dapat diulang kapan saja)
+5. Ubah data kapan pun -> dokumen otomatis mengikuti
