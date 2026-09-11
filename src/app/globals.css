@@ -1,0 +1,527 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ============================================================
+   eSPJ-Kontribusi — Format F4 (215mm x 330mm) & dokumen resmi
+   ============================================================ */
+
+.f4-stage {
+  background: hsl(var(--muted, 0 0% 92%));
+}
+
+.f4-sheet {
+  width: 215mm;
+  min-height: 330mm;
+  margin: 0 auto;
+  background: #fff;
+  color: #000;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+  padding: 12mm 15mm;
+  font-family: Tahoma, Verdana, "Segoe UI", Arial, sans-serif;
+  font-size: 9.5pt;
+  line-height: 1.32;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.f4-sheet.landscape {
+  width: 330mm;
+  min-height: 215mm;
+}
+
+/* ---------------- Kop surat ---------------- */
+.kop {
+  display: flex;
+  align-items: center;
+  gap: 6mm;
+  border-bottom: 3px double #000;
+  padding-bottom: 2mm;
+  margin-bottom: 4mm;
+}
+.kop-logo { flex: 0 0 auto; }
+.kop-teks { flex: 1 1 auto; text-align: center; font-family: Arial, Helvetica, sans-serif; }
+.kop-pemda { font-size: 13.5pt; letter-spacing: 0.5px; }
+.kop-instansi { font-size: 17pt; font-weight: bold; letter-spacing: 1px; }
+.kop-alamat { font-size: 8.5pt; }
+.kop-laman { font-size: 8.5pt; font-weight: bold; border-top: 1.5px solid #000; margin-top: 1mm; padding-top: 1mm; }
+
+/* ---------------- Umum dokumen ---------------- */
+.doc-body { font-size: 9.5pt; }
+.doc-judul {
+  text-align: center;
+  font-weight: bold;
+  text-decoration: underline;
+  margin: 5mm 0 1mm 0;
+  font-size: 10.5pt;
+}
+.doc-nomor { text-align: center; margin-bottom: 4mm; }
+.doc-p { text-align: justify; margin: 2.2mm 0; }
+.bold { font-weight: bold; }
+.ctr { text-align: center; }
+.kanan { text-align: right; }
+.pt-2 { padding-top: 3mm; }
+
+.doc-tbl-pihak { border-collapse: collapse; width: 100%; }
+.doc-tbl-pihak td { vertical-align: top; padding: 0.4mm 0; }
+.w-4 { width: 4mm; } .w-8 { width: 8mm; } .w-10 { width: 10mm; }
+.w-14 { width: 14mm; } .w-18 { width: 18mm; } .w-20 { width: 20mm; }
+.w-24 { width: 24mm; } .w-26 { width: 26mm; } .w-28 { width: 28mm; }
+.w-30 { width: 30mm; } .w-32 { width: 32mm; } .w-38 { width: 38mm; }
+.w-40 { width: 40mm; } .w-42 { width: 42mm; } .w-44 { width: 44mm; } .w-56 { width: 56mm; }
+
+.doc-tbl-barang { border-collapse: collapse; width: 100%; margin: 2mm 0; }
+.doc-tbl-barang td, .doc-tbl-barang thead td {
+  border: 1px solid #000; padding: 1mm 1.5mm; vertical-align: top;
+}
+
+.doc-list { margin: 1mm 0 1mm 8mm; }
+
+.doc-clause { display: flex; gap: 2mm; margin: 1.8mm 0; }
+.doc-clause > span { flex: 0 0 7mm; }
+.doc-clause p { text-align: justify; margin: 0; flex: 1; }
+.doc-clause > div { flex: 1; }
+
+.doc-tbl-berdasarkan { border-collapse: collapse; width: 100%; }
+.doc-tbl-berdasarkan td { vertical-align: top; padding: 0.5mm 0; }
+
+.doc-tbl-rekap { border-collapse: collapse; width: 100%; margin: 1.5mm 0; }
+.doc-tbl-rekap th, .doc-tbl-rekap td {
+  border: 1px solid #000; padding: 0.8mm 1.5mm;
+}
+.doc-tbl-rekap thead td, .doc-tbl-rekap th { font-weight: bold; text-align: center; }
+
+/* ---------------- Tanda tangan ---------------- */
+.ttd-row { display: flex; justify-content: space-between; width: 100%; gap: 10mm; }
+.ttd-col { flex: 1 1 0; text-align: left; min-width: 0; }
+.ttd-col.ctr { text-align: center; }
+.ttd-col .mx-auto { margin-left: auto; margin-right: auto; }
+.ttd-peran { font-weight: bold; }
+.ttd-nama { font-weight: bold; text-decoration: underline; }
+.ttd-ruang { height: 15mm; }
+.materai-box {
+  width: 26mm; height: 13mm;
+  border: 1.2px dashed #666;
+  display: flex; align-items: center; justify-content: center;
+  color: #777; font-size: 8pt; margin: 1mm 0;
+}
+.ttd-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; }
+.ttd-grid-4 .ttd-col { font-size: 8.5pt; }
+.ttd-grid-4 .ttd-ruang { height: 13mm; }
+
+/* ---------------- Cover ---------------- */
+.cover-doc {
+  font-family: "Bookman Old Style", "Book Antiqua", Georgia, "Times New Roman", serif;
+  text-align: left;
+}
+.cover-title { font-size: 24pt; font-weight: bold; text-align: center; margin: 10mm 0 14mm 0; }
+.cover-table { border-collapse: collapse; width: 100%; }
+.cover-table td { vertical-align: top; padding: 1.4mm 0; font-size: 13pt; }
+.cover-table td:nth-child(1) { width: 52mm; }
+.cover-table td:nth-child(2) { width: 6mm; }
+.cover-nilai { font-size: 13pt; margin: 1.5mm 0; }
+.cover-jenis { font-size: 16pt; font-weight: bold; text-align: center; margin-top: 8mm; }
+.cover-uraian { font-size: 13pt; font-weight: bold; text-align: center; text-transform: capitalize; }
+.cover-vendor { font-size: 16pt; font-weight: bold; text-align: center; margin-top: 6mm; }
+
+/* ---------------- BAP Materai ---------------- */
+.materai-header { display: flex; gap: 6mm; }
+.materai-header-left { flex: 1.35; }
+.materai-header-right { flex: 1; }
+.materai-title-c { text-align: center; font-weight: bold; font-size: 13pt; }
+
+/* ---------------- Bukti Pengeluaran (Bend. 20) ---------------- */
+.bukti-head { position: relative; }
+.bukti-judul { text-align: center; margin-top: 3mm; font-size: 12pt; }
+.bukti-sub { text-decoration: underline; font-weight: bold; letter-spacing: 0.5px; }
+.bukti-nomor { position: absolute; right: 0; top: 8mm; font-size: 9pt; }
+.bukti-tanggal { margin-top: 3mm; }
+.bukti-lembar {
+  position: absolute; bottom: 2mm; left: 0; right: 0;
+  font-size: 7pt; line-height: 1.5;
+}
+
+/* ---------------- Disposisi ---------------- */
+.disp-doc { font-family: "Quattrocento Sans", "Segoe UI", Tahoma, Arial, sans-serif; }
+.disp-title { font-size: 11.5pt; margin-bottom: 3mm; }
+.disp-lbl { font-weight: bold; font-size: 8.5pt; }
+.disp-info { margin-bottom: 4mm; }
+.disp-info td { padding: 0.8mm 0; font-size: 9pt; }
+.disp-grid { border-collapse: collapse; width: 100%; }
+.disp-grid th, .disp-grid td { border: 1px solid #000; }
+.disp-th { font-size: 9pt; padding: 1.5mm; text-align: center; font-weight: bold; }
+.disp-items { padding: 1.5mm; vertical-align: top; width: 96mm; }
+.disp-item { display: flex; align-items: center; gap: 1.5mm; padding: 0.55mm 0; font-size: 7.8pt; }
+.disp-no { flex: 0 0 7mm; text-align: right; }
+.disp-uraian { flex: 1; }
+.disp-check { flex: 0 0 10mm; border-bottom: 1px dotted #999; }
+.disp-kolom { vertical-align: top; padding: 1.5mm; width: 46mm; }
+.disp-kolom.ttd { padding: 1.5mm; }
+.disp-box { border: 1px solid #000; margin-bottom: 1.5mm; padding: 1mm 1.5mm; }
+.disp-nama { font-size: 8pt; font-weight: bold; text-align: center; text-decoration: underline; }
+.disp-label { font-size: 7.6pt; text-align: center; }
+.disp-ttd { height: 8mm; }
+.disp-dua { display: flex; gap: 1.5mm; }
+.disp-dua .disp-box { flex: 1; }
+.disp-instruksi { font-size: 8pt; line-height: 1.7; }
+.disp-note-line { min-height: 4.5mm; }
+.disp-catatan { margin-top: 3mm; font-size: 9pt; }
+.disp-garis { border-bottom: 1px solid #000; height: 6mm; width: 80%; }
+
+/* ---------------- Daftar Pembayaran (landscape) ---------------- */
+.daftar-title { font-size: 13pt; }
+.daftar-periode { font-size: 10.5pt; margin: 1.5mm 0 4mm 0; }
+.daftar-tbl { border-collapse: collapse; width: 100%; }
+.daftar-tbl th, .daftar-tbl td { border: 1px solid #000; padding: 1.2mm 1.5mm; font-size: 8.8pt; }
+.daftar-tbl th { text-align: center; font-weight: bold; background: #f2f2f2; }
+
+/* ================= PRINT — F4 ================= */
+.print-root {
+  min-height: 100vh;
+  background: #4b5563;
+  padding: 24px 0;
+}
+
+@media print {
+  @page { size: 215mm 330mm; margin: 0; }
+  @page landscape-f4 { size: 330mm 215mm; margin: 0; }
+
+  .print-root.landscape-page { page: landscape-f4; }
+
+  body {
+    background: #fff !important;
+  }
+  .no-print { display: none !important; }
+  .print-hide { display: none !important; }
+
+  .print-root {
+    background: #fff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+  }
+
+  .f4-stage {
+    background: #fff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+  .f4-sheet {
+    box-shadow: none !important;
+    margin: 0 !important;
+    width: 215mm !important;
+    min-height: auto !important;
+    padding: 12mm 15mm !important;
+    transform: none !important;
+  }
+  .f4-sheet.landscape {
+    width: 330mm !important;
+    min-height: auto !important;
+  }
+  .zoom-wrap { transform: none !important; width: auto !important; height: auto !important; }
+}
+
+/* ============================================================
+   Editor Dokumen Profesional (WYSIWYG ala pengolah kata)
+   ============================================================ */
+
+/* Kertas */
+.ed-paper {
+  position: relative;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 3px 18px rgba(15, 23, 42, 0.28), 0 1px 4px rgba(15, 23, 42, 0.18);
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+.ed-body {
+  position: relative;
+  outline: none;
+  min-height: 40mm;
+  box-sizing: border-box;
+}
+.ed-body p { margin: 0 0 6pt; min-height: 1em; }
+.ed-body img { max-width: 100%; height: auto; }
+.ed-body img.img-selected { outline: 2px solid #059669; outline-offset: 2px; }
+.ed-body figcaption { font-size: 9pt; color: #555; text-align: center; margin-top: 1mm; }
+.ed-body blockquote { border-left: 3px solid #94a3b8; margin: 2mm 0; padding: 1mm 4mm; color: #475569; font-style: italic; }
+.ed-body ul, .ed-body ol { margin: 1mm 0 2mm; }
+.ed-body ul { padding-left: 8mm; list-style: disc; }
+.ed-body ol { padding-left: 8mm; list-style: decimal; }
+.ed-body ol.ml-list { list-style: decimal; }
+.ed-body ol.ml-list ol { list-style: lower-alpha; }
+.ed-body ol.ml-list ol ol { list-style: lower-roman; }
+.ed-body a { color: #047857; text-decoration: underline; }
+
+/* Heading & gaya paragraf */
+.ed-body h1, .ed-body .doc-h1 { font-size: 16pt; font-weight: bold; margin: 10pt 0 6pt; line-height: 1.25; }
+.ed-body h2, .ed-body .doc-h2 { font-size: 14pt; font-weight: bold; margin: 8pt 0 5pt; line-height: 1.3; }
+.ed-body h3, .ed-body .doc-h3 { font-size: 12.5pt; font-weight: bold; margin: 6pt 0 4pt; }
+.ed-body h4, .ed-body .doc-h4 { font-size: 11.5pt; font-weight: bold; margin: 6pt 0 4pt; }
+.doc-style-title { font-size: 20pt; font-weight: bold; text-align: center; margin: 4mm 0; line-height: 1.25; }
+.doc-style-subtitle { font-size: 14pt; text-align: center; color: #475569; margin: 0 0 4mm; }
+.doc-style-quote { border-left: 3px solid #94a3b8; margin: 2mm 0; padding: 1mm 4mm; color: #475569; font-style: italic; }
+.doc-style-caption { font-size: 9pt; color: #64748b; text-align: center; }
+
+/* Pemisah halaman eksplisit */
+.ed-body .page-break {
+  position: relative;
+  border-top: 2px dashed #94a3b8;
+  margin: 10px 0;
+  user-select: none;
+}
+.ed-body .page-break span {
+  position: absolute; right: 0; top: -9px;
+  background: #f1f5f9; border: 1px solid #cbd5e1; color: #64748b;
+  font-size: 9px; padding: 0 6px; border-radius: 8px; line-height: 16px;
+}
+
+/* Panduan batas halaman (tampilan mengalir) */
+.ed-guide { position: absolute; left: -14px; right: -14px; border-top: 1px dashed #b6c2d2; pointer-events: none; z-index: 5; }
+.ed-guide-num {
+  position: absolute; right: -8px; top: 0; transform: translateY(-50%);
+  background: #64748b; color: #fff; font-size: 9px; line-height: 14px;
+  padding: 0 6px; border-radius: 8px; pointer-events: none;
+}
+
+/* Field nomor halaman */
+.ed-body .pn-field, .ed-hf-zone .pn-field {
+  display: inline-block; background: #ecfdf5; border: 1px dashed #059669;
+  border-radius: 3px; padding: 0 5px; font-size: 0.85em; color: #047857;
+}
+
+/* Tab stop */
+.ed-body .tabstop { display: inline-block; }
+.ed-body .tabstop-wrap { display: inline-block; }
+.ed-body .tabstop-wrap.tab-right { text-align: right; }
+.ed-body .tabstop-wrap.tab-center { text-align: center; }
+
+/* Seleksi sel tabel */
+.ed-body td.cell-sel, .ed-body th.cell-sel { background: rgba(5, 150, 105, 0.14) !important; }
+.ed-body td, .ed-body th { box-sizing: border-box; }
+
+/* Daftar Isi */
+.ed-body .toc { padding: 2mm 0; user-select: none; }
+.ed-body .toc-title { text-align: center; font-weight: bold; font-size: 13pt; margin-bottom: 4mm; letter-spacing: 1px; }
+.ed-body .toc-row { display: flex; align-items: baseline; gap: 1.5mm; margin: 0.9mm 0; cursor: pointer; }
+.ed-body .toc-l2 { padding-left: 6mm; }
+.ed-body .toc-l3 { padding-left: 12mm; }
+.ed-body .toc-l4 { padding-left: 18mm; }
+.ed-body .toc-leader { flex: 1 1 auto; border-bottom: 1px dotted #64748b; min-width: 6mm; transform: translateY(-2px); }
+.ed-body .toc-page { flex: 0 0 auto; min-width: 8mm; text-align: right; }
+.ed-body .toc-empty { color: #94a3b8; font-style: italic; }
+
+/* Zona header / footer */
+.ed-hf-zone {
+  position: absolute; left: var(--ml); right: var(--mr);
+  border: 1px dashed transparent; border-radius: 4px;
+  min-height: 10mm; padding: 1mm 2mm; box-sizing: border-box;
+  color: #333; font-size: 9pt; transition: border-color 0.15s;
+}
+.ed-hf-zone:hover { border-color: #a7f3d0; }
+.ed-hf-zone.ed-hf-active { border-color: #10b981; background: rgba(16, 185, 129, 0.04); }
+.ed-hf-label {
+  position: absolute; right: 4px; top: -9px; background: #10b981; color: #fff;
+  font-size: 8.5px; line-height: 14px; padding: 0 7px; border-radius: 8px;
+  display: none; user-select: none; font-weight: 600;
+}
+.ed-hf-zone:hover .ed-hf-label, .ed-hf-zone.ed-hf-active .ed-hf-label { display: block; }
+
+/* Ruler */
+.ed-ruler {
+  height: 20px; position: relative; margin: 0 auto 2px; user-select: none;
+  background:
+    repeating-linear-gradient(to right, transparent 0, transparent calc(1mm - 1px), #cbd5e1 calc(1mm - 1px), #cbd5e1 1mm) bottom/100% 5px no-repeat,
+    repeating-linear-gradient(to right, transparent 0, transparent calc(5mm - 1px), #94a3b8 calc(5mm - 1px), #94a3b8 1mm) bottom/100% 9px no-repeat,
+    linear-gradient(to bottom, #f8fafc, #eef2f7);
+  border: 1px solid #e2e8f0; border-bottom: none; border-radius: 3px 3px 0 0; overflow: visible;
+}
+.ed-ruler .ruler-margin { position: absolute; top: 0; bottom: 0; background: rgba(100, 116, 139, 0.16); pointer-events: none; }
+.ruler-marker { position: absolute; cursor: ew-resize; z-index: 10; }
+.ruler-marker .mk { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; margin: 0 auto; }
+.ruler-marker .mk-first { border-bottom: 7px solid #0f766e; }
+.ruler-marker .mk-hang { border-top: 7px solid #0f766e; }
+.ruler-marker .mk-left, .ruler-marker .mk-right { width: 8px; height: 12px; background: #0f766e; border-radius: 2px; margin: 0 auto; }
+.ruler-tab { position: absolute; top: 2px; width: 8px; height: 8px; cursor: pointer; z-index: 9; }
+.ruler-tab.tab-left { background: #b45309; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.ruler-tab.tab-center { background: #b45309; clip-path: polygon(0 0, 100% 0, 50% 100%); }
+.ruler-tab.tab-right { background: #b45309; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+
+/* Halaman cetak / pratinjau */
+.ed-print-page { position: relative; overflow: hidden; background: #fff; box-sizing: border-box; box-shadow: 0 2px 14px rgba(15, 23, 42, 0.25); }
+.ed-print-header { position: absolute; overflow: visible; }
+.ed-print-footer { position: absolute; overflow: visible; }
+.ed-print-body { width: 100%; height: 100%; overflow: hidden; box-sizing: border-box; position: relative; }
+.ed-print-body p { margin: 0 0 6pt; }
+.ed-print-body h1, .ed-print-body .doc-h1 { font-size: 16pt; font-weight: bold; margin: 10pt 0 6pt; }
+.ed-print-body h2, .ed-print-body .doc-h2 { font-size: 14pt; font-weight: bold; margin: 8pt 0 5pt; }
+.ed-print-body h3, .ed-print-body .doc-h3 { font-size: 12.5pt; font-weight: bold; margin: 6pt 0 4pt; }
+.ed-print-body h4, .ed-print-body .doc-h4 { font-size: 11.5pt; font-weight: bold; margin: 6pt 0 4pt; }
+
+/* Pratinjau cetak di layar */
+.ed-preview-stage { background: #475569; }
+.ed-preview-stage .ed-print-page { margin: 0 auto 16px; }
+
+/* Pegangan ubah ukuran gambar */
+.ed-img-handle {
+  position: absolute; width: 11px; height: 11px; background: #fff;
+  border: 2px solid #059669; border-radius: 2px; z-index: 40; pointer-events: auto;
+}
+.ed-img-handle.nw { cursor: nwse-resize; } .ed-img-handle.ne { cursor: nesw-resize; }
+.ed-img-handle.sw { cursor: nesw-resize; } .ed-img-handle.se { cursor: nwse-resize; }
+
+/* Pegangan ubah lebar kolom tabel */
+.ed-col-handle { position: absolute; width: 7px; top: 0; bottom: 0; cursor: col-resize; z-index: 30; pointer-events: auto; }
+
+/* Menu konteks */
+.ed-ctx {
+  position: fixed; z-index: 90; min-width: 210px; background: #fff;
+  border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 8px 30px rgba(15, 23, 42, 0.18);
+  padding: 4px; font-size: 12.5px;
+}
+.ed-ctx-item { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 10px; border-radius: 5px; text-align: left; color: #1e293b; }
+.ed-ctx-item:hover { background: #f1f5f9; }
+.ed-ctx-item.danger { color: #b91c1c; }
+.ed-ctx-sep { height: 1px; background: #e2e8f0; margin: 4px 6px; }
+.ed-ctx-key { margin-left: auto; font-size: 10.5px; color: #94a3b8; }
+
+/* Cari & ganti */
+.ed-find-hit { background: #fde68a; border-radius: 2px; }
+.ed-find-hit.active { background: #f59e0b; color: #fff; }
+
+/* Gelap halus untuk chrome editor */
+.ed-ribbon-tab { padding: 5px 14px; font-size: 12.5px; border-radius: 6px 6px 0 0; font-weight: 500; color: #cbd5e1; }
+.ed-ribbon-tab:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+.ed-ribbon-tab.active { background: #f8fafc; color: #0f172a; }
+.ed-tool-btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 28px; min-width: 28px; border-radius: 5px; color: #334155; font-size: 12px; padding: 0 5px; }
+.ed-tool-btn:hover { background: #e2e8f0; }
+.ed-tool-btn.active { background: #d1fae5; color: #065f46; }
+.ed-tool-sep { width: 1px; align-self: stretch; margin: 3px 4px; background: #e2e8f0; }
+
+/* Status bar */
+.ed-status { font-size: 11px; color: #cbd5e1; }
+
+/* Fidelitas dokumen SPJ hasil seed: kembalikan ritme margin asli */
+.ed-body p.doc-p, .ed-print-body p.doc-p { margin: 2.2mm 0; }
+.ed-body .doc-judul, .ed-print-body .doc-judul { margin: 5mm 0 1mm 0; }
+.ed-body .doc-nomor, .ed-print-body .doc-nomor { margin-bottom: 4mm; }

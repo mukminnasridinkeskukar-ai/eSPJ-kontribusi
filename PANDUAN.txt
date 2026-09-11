@@ -1,132 +1,49 @@
-PANDUAN eSPJ-Kontribusi — Versi Halaman Mandiri (index.html)
-=============================================================
-Aplikasi lengkap dalam SATU file: formulir "Data Pelatihan" ->
-9 dokumen SPJ format F4 yang terisi otomatis, dapat disunting
-bebas, dan disimpan permanen.
+================================================================
+ eSPJ-KONTRIBUSI — DINAS KESEHATAN KAB. KUTAI KARTANEGARA
+ Termasuk EDITOR DOKUMEN PROFESIONAL (ala pengolah kata)
+================================================================
 
-ISI PAKET
----------
-1. index.html           -> aplikasi lengkap dalam satu file (buka langsung di browser)
-2. setup-database.sql   -> struktur database + data awal (untuk penyimpanan bersama/berbagi)
-3. PANDUAN.txt          -> file ini
+CARA MENJALANKAN
+1) Pasang Node.js 20+ (atau Bun).
+2) Buka terminal di folder ini, jalankan:
+     npm install        (atau: bun install)
+     npx prisma generate
+     npm run dev        (atau: bun run dev)
+3) Buka http://localhost:3000
 
-DUA MODE PENYIMPANAN
---------------------
-* Mode Lokal (bawaan)   : tanpa konfigurasi apa pun. Data tersimpan di
-                          perangkat/browser yang dipakai. Cocok untuk
-                          dicoba langsung atau penggunaan satu komputer.
-* Mode Server (opsional): data tersimpan terpusat pada server data instansi,
-                          dapat diakses dari komputer mana pun. Aktivasi
-                          lewat tombol status di kanan atas aplikasi.
+FITUR UTAMA
+- Data Pelatihan  : formulir sumber tunggal (6 tab, 40 kolom).
+- Dokumen SPJ (F4): 9 dokumen otomatis (Cover, BAP, BAST, BA Bayar,
+  BA Bermaterai, Bukti Bend.20, Disposisi, Daftar Pembayaran,
+  Pernyataan PA). Tombol "Cetak F4" mencetak pada kertas F4/Folio.
+- Editor Dokumen  : sunting bebas seluruh dokumen seperti Word:
+  * Ribbon 7 tab (Berkas, Beranda, Sisipkan, Tata Letak, Referensi,
+    Tinjau, Tampilan)
+  * Format huruf/paragraf, daftar, gaya (Judul 1-4), kutipan
+  * Tabel lengkap: sisip baris/kolom, gabung/pisah sel, lebar kolom,
+    garis, warna sel, kepala tabel berulang
+  * Gambar: unggah, ubah ukuran (rasio terjaga), rata & keterangan
+  * Kop/kaki halaman, nomor halaman otomatis, halaman pertama berbeda
+  * Ukuran kertas F4/A4/A5/Letter/Legal/Kustom, orientasi, margin
+  * Penggaris + inden + tab stop, spasi baris & paragraf
+  * Daftar isi otomatis + perbarui, panel navigasi judul
+  * Cari & ganti, hitung kata, ejaan, pilih bahasa
+  * Simpan otomatis ke database (debounce), indikator tersimpan
+  * Riwayat versi + pulihkan (versi lama tak pernah dihapus)
+  * Ekspor: DOCX (Word asli), PDF (via dialog cetak), HTML, TXT
+  * Impor: DOCX, HTML, TXT
+  * Zoom 50-200%, pratinjau cetak, layar penuh, pintasan keyboard
+    (Ctrl+B/I/U/Z/Y/F/H/S/P/K, Tab di tabel pindah sel)
 
-====================== A. PAKAI LANGSUNG (Mode Lokal) ======================
-1. Klik dua kali index.html (buka di browser: Chrome/Edge/Firefox).
-2. Selesai — 5 kegiatan contoh dari file Excel langsung tersedia.
-   Jika belum: Dashboard -> tombol "Isi Data Awal".
-3. Semua perubahan (formulir, suntingan dokumen, pejabat, pengaturan)
-   otomatis tersimpan di perangkat tersebut.
+DATABASE
+- SQLite siap pakai di db/custom.db (berisi 5 kegiatan contoh).
+- Struktur: prisma/schema.prisma (Kegiatan, Participant, Pejabat,
+  Pengaturan, SpjDoc, SpjDocVersion).
+- Cadangkan cukup dengan menyalin file db/custom.db.
 
-====================== B. HOSTING HALAMAN (opsional) ======================
-Agar dapat dibuka dari mana saja tanpa instalasi:
-1. Siapkan akun pada layanan hosting halaman statis pilihan Anda.
-2. Buat "repositori/situs" baru, beri nama mis. espj-kontribusi.
-3. Unggah file index.html (cukup satu file ini; file .sql tidak wajib).
-4. Aktifkan fitur "Pages"/publikasi situs pada pengaturan repositori
-   (cabang utama, folder root).
-5. Tunggu 1-3 menit, lalu buka alamat situs yang diberikan layanan.
-
-====================== C. SERVER DATA TERPUSAT (opsional) ======================
-Digunakan bila data harus sama & tersambung antar banyak komputer.
-
-C.1 PASANG STRUKTUR DATABASE
-1. Buat proyek pada layanan penyimpanan basis data pilihan Anda
-   (yang menyediakan database PostgreSQL + SQL Editor).
-2. Buka menu "SQL Editor" -> salin SELURUH isi setup-database.sql -> Run.
-3. Tabel yang terbentuk: kegiatan, participant, pejabat, pengaturan,
-   dokumen_sunting (penyimpanan hasil suntingan dokumen SPJ)
-   + data contoh 5 kegiatan dari file Excel.
-
-C.2 HUBUNGKAN APLIKASI (2 cara, pilih salah satu)
-CARA 1 — lewat aplikasi (disarankan, tanpa edit file):
-1. Buka aplikasi (lokal maupun alamat situs hasil langkah B).
-2. Klik tombol status di KANAN ATAS (bertuliskan "Mode Lokal").
-3. Isi Alamat Server Data & Kunci Akses Publik dari layanan Anda
-   -> "Simpan & Uji".
-4. Status berubah hijau "Tersambung — Server Data" dan data langsung muncul.
-   (Konfigurasi tersimpan di browser; ulangi sekali saja per komputer.)
-
-CARA 2 — lewat edit file:
-1. Edit index.html (ikon pensil bila di hosting).
-2. Cari baris:  const KONFIG_SERVER = {
-3. Isi SERVER_URL dan KUNCI_AKSES di antara tanda kutip -> simpan.
-
-========================== D. FITUR APLIKASI ==========================
-- Dashboard          : statistik nilai kontribusi, peserta, PPh 23, kelengkapan BA
-- Data Pelatihan     : formulir master 6 tab (pengganti sheet "Data Pelatihan")
-  1. Kegiatan  2. Vendor  3. Invoice & Rekening  4. Berita Acara
-  5. Nilai & Pajak (jumlah biaya & PPh23 & terbilang otomatis)
-  6. Peserta Penggantian (baris sheet "Daftar Pembayaran Penggantian U")
-- Dokumen SPJ (F4)   : 9 dokumen terisi otomatis dari formulir:
-  Cover, BAP, BAST, BA Pembayaran, BA Bermaterai, Bukti Pengeluaran (Bend. 20),
-  Lembar Disposisi, Daftar Pembayaran Penggantian Uang (F4 landscape),
-  Surat Pernyataan PA/PPTK
-- Pejabat & Pengaturan: kop surat, program/kegiatan, kode rekening, data pejabat
-
-===== E. MENYUNTING DOKUMEN SECARA BEBAS (BARU) =====
-Seluruh isi dokumen dapat diubah langsung, lalu disimpan permanen:
-1. Menu "Dokumen SPJ (F4)" -> pilih kegiatan & dokumen.
-2. Klik "Edit Dokumen" -> mode sunting aktif (bingkai kuning).
-3. Klik langsung teks/angka pada dokumen, ketik untuk mengubah apa pun:
-   nomor surat, kalimat, nilai, isi tabel, sampai nama pejabat.
-4. Klik "Simpan Dokumen" -> perubahan tersimpan permanen
-   (pada Mode Lokal: di perangkat; pada Mode Server: di tabel
-   dokumen_sunting sehingga sama di semua komputer).
-5. Dokumen yang pernah disunting diberi tanda "Tersunting".
-   Mengubah data formulir TIDAK lagi mengubah dokumen tersebut.
-6. Tekan "Reset" untuk membuang suntingan dan kembali ke isi otomatis.
-7. Cetak kapan saja: "Cetak F4" selalu mencetak tampilan terakhir
-   (termasuk suntingan yang belum disimpan sekalipun).
-
-========================== F. MENCETAK F4 ==========================
-1. Menu "Dokumen SPJ (F4)" -> pilih kegiatan & dokumen -> "Cetak F4"
-2. Pada dialog printer:
-   - Paper size : F4 / Folio / Legal (215 x 330 mm)
-   - Margins    : Default / None
-   - Scale      : 100 (jangan "Fit to page")
-   - Matikan "Headers and footers"
-3. Daftar Pembayaran otomatis landscape (330 x 215 mm)
-
-Tips bila printer tidak punya ukuran F4: pilih Legal lalu atur
-skala 100%; ukuran F4 sedikit lebih panjang dari Legal.
-
-========================== G. KEAMANAN DATA ==========================
-- Kunci akses publik memang sifatnya publik (dipakai dari browser);
-  yang menjaga keamanan adalah Row Level Security (sudah diaktifkan).
-- Konfigurasi bawaan membuka akses penuh agar aplikasi internal
-  dapat langsung dipakai tanpa login. Untuk memperketat, aktifkan
-  fitur autentikasi layanan Anda lalu sesuaikan policy pada
-  setup-database.sql (lihat catatan bawah file).
-- Jangan gunakan kunci akses tingkat admin di aplikasi!
-- Unduh cadangan data secara berkala melalui menu ekspor/backup
-  layanan penyimpanan data yang Anda pakai.
-
-========================== H. TROUBLESHOOTING ==========================
-Masalah                            Solusi
----------------------------------  ------------------------------------------
-Status merah "Koneksi gagal"       Periksa Alamat Server & Kunci Akses;
-                                   pastikan setup-database.sql sudah di-Run
-Data tidak muncul                  Cek SQL Editor: SELECT * FROM kegiatan;
-                                   pastikan tidak kosong (pakai Isi Data Awal)
-"relation ... does not exist"      Struktur belum dipasang -> ulangi langkah C.1
-Suntingan dokumen hilang           Pastikan sudah menekan "Simpan Dokumen";
-                                   bila di komputer lain, gunakan Mode Server
-Dokumen terpotong saat print       Set paper F4/Folio & scale 100%
-Lupa konfigurasi di komputer lain  Ulangi langkah C.2 (tersimpan per browser)
-
-========================== I. ALUR KERJA HARIAN ==========================
-1. Tambah kegiatan baru  -> menu Data Pelatihan -> Tambah Kegiatan
-2. Isi data selengkap mungkin (nomor BA boleh menyusul)
-3. Buka Dokumen SPJ -> semua dokumen sudah terisi
-4. Bila perlu penyesuaian -> Edit Dokumen -> ubah langsung -> Simpan Dokumen
-5. Cetak F4 sesuai kebutuhan (dapat diulang kapan saja)
-6. Ubah data kapan pun -> dokumen yang belum disunting otomatis mengikuti
+CATATAN CETAK
+- Ukuran kertas diatur pada dialog cetak sistem: pilih F4/Folio
+  215 x 330 mm (Daftar Pembayaran: 330 x 215 mm mendatar),
+  skala 100%, margin: None/Default tanpa header-footer browser.
+- Di Editor Dokumen, tombol "Cetak / PDF" sudah mengatur ukuran
+  halaman otomatis sesuai pengaturan dokumen.

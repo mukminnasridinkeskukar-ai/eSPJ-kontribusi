@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// eSPJ-Kontribusi — Dinas Kesehatan Kab. Kutai Kartanegara
+// ============================================================
+
+// Satu record = satu baris pada sheet "Data Pelatihan"
+model Kegiatan {
+  id        String   @id @default(cuid())
+  no        Int      @default(0) // kolom A: NO
+
+  // --- Identitas Pihak Kedua (Pelaksana / Vendor) ---
+  namaDirektur String  @default("") // Nama Direktur/Pimpinan
+  vendor       String  @default("") // PELAKSANA / PIHAK KE-3 / VENDOR
+  jabatanVendor String @default("") // Jabatan kontak vendor
+  alamatVendor String  @default("")
+  cpVendor     String  @default("") // Contact Person
+
+  // --- Data Kegiatan Pelatihan ---
+  namaKegiatan String  @default("") // KEGIATAN
+  dasarSurat   String  @default("") // Dasar Surat (kalimat lengkap)
+  noSuratPenawaran String  @default("")
+  tglSuratPenawaran String @default("")
+  tglMulai     String  @default("")
+  tglSelesai   String  @default("")
+  metode       String  @default("Klasikal") // Klasikal / Blended Learning / e-Learning
+  tempat       String  @default("") // Tempat Pelaksanaan
+
+  // --- Invoice & Rekening ---
+  noInvoice    String  @default("")
+  tglInvoice   String  @default("")
+  noRekening   String  @default("")
+  namaBank     String  @default("")
+  pemilikRekening String @default("")
+
+  // --- Dokumen Berita Acara (nomor & tanggal) ---
+  noBAP        String  @default("") // BA Pemeriksaan Pekerjaan
+  tglBAP       String  @default("")
+  noBAST       String  @default("") // BA Serah Terima Pekerjaan
+  tglBAST      String  @default("")
+  noBABayar    String  @default("") // BA Pembayaran
+  tglBABayar   String  @default("")
+  noBAMaterai  String  @default("") // BA Pembayaran Bermaterai
+  tglBAMaterai String  @default("")
+
+  // --- Nilai & Pajak ---
+  jumlahPeserta Int    @default(0)
+  biayaSatuan   Float  @default(0)
+  peserta       String @default("") // Nama peserta penerima kontribusi (an. ...)
+  uraianPembayaran String @default("") // uraian kwitansi/AK — auto bila kosong
+  ppn           Float  @default(0)
+  pph23         Float  @default(0)
+  sumberDana    String @default("")
+  noSPPA        String @default("") // Nomor SP PA
+
+  // --- Daftar penggantian biaya kontribusi peserta (sheet Daftar Pembayaran) ---
+  participants Participant[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Baris pada sheet "Daftar Pembayaran Penggantian Uang"
+model Participant {
+  id          String   @id @default(cuid())
+  kegiatanId  String
+  kegiatan    Kegiatan @relation(fields: [kegiatanId], references: [id], onDelete: Cascade)
+  urutan      Int      @default(0)
+  nama        String   @default("")
+  jabatan     String   @default("")
+  nip         String   @default("")
+  pangkat     String   @default("") // Pangkat / Golongan
+  npwp        String   @default("")
+  noRekening  String   @default("")
+  pemilikRekening String @default("")
+  jumlah      Float    @default(0)
+  keterangan  String   @default("") // bank
+}
+
+// Pejabat pengelola (dipakai lintas dokumen)
+model Pejabat {
+  id      String @id @default(cuid())
+  kode    String @unique // KPA | PPTK | BP | BPP | VERIFIKATOR | PPHP
+  nama    String @default("")
+  nip     String @default("")
+  jabatan String @default("") // teks jabatan (pendek)
+  jabatanPanjang String @default("") // teks jabatan lengkap utk badan dokumen
+}
+
+// ============================================================
+// Editor Dokumen — dokumen tersimpan terstruktur (HTML + settings)
+// ============================================================
+
+// Satu record = satu dokumen yang diedit di Editor Dokumen
+model SpjDoc {
+  id          String   @id @default(cuid())
+  title       String   @default("Dokumen Tanpa Judul")
+  source      String   @default("custom") // "gen:<kegiatanId>:<docKey>" | "custom"
+  kegiatanId  String?  // opsional: terhubung ke kegiatan pelatihan
+  docKey      String?  // opsional: key dokumen SPJ otomatis (bap, cover, ...)
+  content     String   @default("") // HTML isi dokumen (terstruktur: p, h1-h4, table, img, ul/ol, page-break)
+  headerHtml  String   @default("") // HTML kop/header berulang
+  headerFirst String   @default("") // HTML header halaman pertama (bila berbeda)
+  footerHtml  String   @default("") // HTML footer berulang
+  footerFirst String   @default("") // HTML footer halaman pertama (bila berbeda)
+  settings    String   @default("{}") // JSON DocSettings: kertas, orientasi, margin, nomor halaman, dll.
+  versions    SpjDocVersion[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Riwayat versi dokumen — tidak pernah dihapus otomatis
+model SpjDocVersion {
+  id          String   @id @default(cuid())
+  docId       String
+  doc         SpjDoc   @relation(fields: [docId], references: [id], onDelete: Cascade)
+  title       String   @default("")
+  content     String   @default("")
+  headerHtml  String   @default("")
+  headerFirst String   @default("")
+  footerHtml  String   @default("")
+  footerFirst String   @default("")
+  settings    String   @default("{}")
+  label       String   @default("Manual") // Manual | Otomatis | Sebelum pemulihan
+  author      String   @default("Pengguna")
+  createdAt   DateTime @default(now())
+}
+
+// Pengaturan umum instansi / program / kegiatan
+model Pengaturan {
+  id          String @id @default("utama")
+  pemerintah  String @default("PEMERINTAH KABUPATEN KUTAI KARTANEGARA")
+  instansi    String @default("DINAS KESEHATAN")
+  alamat1     String @default("Jalan Cut Nyak Dien Nomor 33, Melayu, Tenggarong, Kutai Kartanegara")
+  alamat2     String @default("Kalimantan Timur 75512")
+  laman       String @default("Laman : dinkes.kukarkab.go.id Pos-el : dinaskesehatan.kukar@gmail.com")
+
+  program     String @default("Peningkatan Kapasitas Sumber Daya Manusia Kesehatan")
+  kegiatan    String @default("Pengembangan Mutu dan Peningkatan Kompetensi Teknis Sumber Daya Manusia Kesehatan Tingkat Daerah Kabupaten/Kota")
+  subKegiatan String @default("Pengembangan Mutu dan Peningkatan Kompetensi Teknis Sumber Daya Manusia Kesehatan Tingkat Daerah Kabupaten/Kota")
+  pekerjaan   String @default("Belanja Kursus Singkat/Pelatihan")
+  lokasi      String @default("Dinas Kesehatan Kab. Kutai Kartanegara")
+  lokasiPekerjaan String @default("Samarinda")
+  anggaranLabel String @default("DAK NON FISIK TA 2026")
+  kotaTtd     String @default("Tenggarong")
+  tahunAnggaran String @default("2026")
+  sumberDanaDefault String @default("DAK Non Fisik Dinas Kesehatan Kab. Kutai Kartanegara Tahun 2026")
+
+  kodeRekening String @default("5.1.02.02.012.00001")
+  uraianKodeRekening String @default("Belanja Kursus Singkat/Pelatihan")
+  noDPA       String @default("DPPA/A.1/1.02.0.00.0.00.01.0000/001/2026")
+
+  skKPA       String @default("Berdasarkan SK Bupati Kutai Kartanegara Nomor : 39/SK-BUP/HK/2026, tanggal 15 Januari 2026, tentang Pelimpahan Kewenangan Pengguna Anggaran kepada Kuasa Pengguna Anggaran dan penunjukan Bendahara Pengeluaran Pembantu pada Dinas Kesehatan Tahun Anggaran 2026")
+  jabatanPPTKPanjang String @default("Pejabat Pelaksana Teknis Kegiatan (PPTK) Sub Kegiatan Pengembangan Mutu dan Peningkatan Kompetensi Teknis Sumber Daya Manusia Kesehatan Tingkat Daerah Kabupaten/Kota Tahun Anggaran 2026 yang diangkat berdasarkan Keputusan Kuasa Pengguna Anggaran Nomor: B-208/DINKES/SKRT-UTK/900.1.15/2/2026, Tanggal 09 Februari 2026")
+  jabatanKPAPanjang  String @default("Kuasa Pengguna Anggaran Kegiatan Pengembangan Mutu dan Peningkatan Kompetensi Teknis Sumber Daya Manusia Kesehatan Tingkat Daerah Kabupaten/Kota yang diangkat Berdasarkan SK Bupati Kutai Kartanegara Nomor : 39/SK-BUP/HK/2026, tanggal 15 Januari 2026, tentang Pelimpahan Kewenangan Pengguna Anggaran kepada Kuasa Pengguna Anggaran dan penunjukan Bendahara Pengeluaran Pembantu pada Dinas Kesehatan Tahun Anggaran 2026")
+}
