@@ -1,81 +1,110 @@
 ================================================================
 eSPJ-Kontribusi — Dinas Kesehatan Kab. Kutai Kartanegara
 Aplikasi Pengelola SPJ Kontribusi Pelatihan + Editor Dokumen
+PANDUAN PEMASANGAN & PENGGUNAAN
 ================================================================
 
-ISI PAKET
----------
-- src/          kode sumber aplikasi (Next.js 16 + TypeScript + Tailwind)
-- prisma/       skema basis data (SQLite)
-- db/custom.db  basis data siap pakai, berisi 5 kegiatan contoh dari
-                file Excel asli + data pejabat & pengaturan
-- public/       logo dan aset statis
+SYARAT
+------
+- Node.js 20 atau lebih baru (sudah terpasang) — cek dengan:
+    node -v
 
-CARA MENJALANKAN
-----------------
-1. Pasang Node.js 20+ (atau Bun 1.1+).
-2. Buka terminal di folder paket ini, lalu:
-     npm install        (atau: bun install)
-3. Jalankan aplikasi:
-     npm run dev        (atau: bun run dev)
-4. Buka browser ke alamat yang tampil (umumnya http://localhost:3000).
+A. CARA MENJALANKAN (3 LANGKAH)
+-------------------------------
+1. EKSTRAK seluruh isi paket ini ke satu folder, misalnya:
+      C:\espj-kontribusi
+   (klik kanan pada eSPJ-Kontribusi.zip -> Extract All / Ekstrak)
 
-Basis data otomatis dibuat/diperbarui saat pertama dijalankan
-(Prisma). File db/custom.db yang disertakan sudah berisi data contoh;
-hapus file tersebut bila ingin mulai kosong.
+2. BUKA TERMINAL di folder hasil ekstrak:
+   - Windows : buka folder tersebut di File Explorer, klik kotak
+               alamat di atas, ketik  cmd  lalu tekan Enter.
+   - macOS   : Terminal -> cd ke folder tersebut.
+   Linux     : sama dengan macOS.
 
-MENU UTAMA
-----------
-1. Dashboard            ringkasan seluruh kegiatan & kelengkapan BA
-2. Data Pelatihan       formulir sumber data (satuan setara sheet
-                        "Data Pelatihan" pada file Excel)
-3. Dokumen SPJ (F4)     9 dokumen resmi terisi otomatis dari data,
-                        langsung terbuka di Editor Dokumen:
-                        - Cover SPJ
-                        - BA Pemeriksaan Pekerjaan (BAP)
-                        - BA Serah Terima Pekerjaan (BAST)
-                        - BA Pembayaran
-                        - BA Pembayaran Bermaterai
-                        - Bukti Pengeluaran (Bend. 20)
-                        - Lembar Disposisi SPJ
-                        - Daftar Pembayaran Penggantian Uang
-                        - Surat Pernyataan PA/PPTK
-4. Editor Dokumen       kelola seluruh dokumen (SPJ & dokumen bebas),
-                        buat dokumen baru dari nol
-5. Pejabat & Pengaturan data pejabat, identitas instansi, program
+3. JALANKAN dua perintah berikut (satu per satu, tunggu selesai):
 
-EDITOR DOKUMEN (ala pengolah kata)
-----------------------------------
-- Tampilan kertas WYSIWYG; ukuran kertas F4/A4/A5/Letter/Legal/kustom,
-  tegak/mendatar, lima preset margin, penggaris dengan inden & tab.
-- Ribbon tujuh tab: Berkas, Beranda, Sisipkan, Tata Letak, Referensi,
-  Tinjau, Tampilan — seluruh tombol berfungsi nyata.
-- Gaya paragraf (Judul 1-4) -> panel navigasi isi + Daftar Isi otomatis.
-- Tabel lengkap: tambah/hapus baris-kolom, gabung/pecah sel, atur
-  lebar, garis, arsir, ulangi baris judul tiap halaman.
+      npm install
+
+   (2-5 menit pertama kali; otomatis menyiapkan klien basis data)
+
+      npm run dev
+
+   Jika muncul "Ready" / "Local: http://localhost:3000" — SELESAI.
+   Buka browser ke alamat:   http://localhost:3000
+
+Catatan:
+- Jika port 3000 dipakai aplikasi lain:
+      npm run dev -- -p 3001
+  lalu buka http://localhost:3001
+- Jangan menghapus/mengubah nama file .env dan folder db.
+
+B. DATA YANG SUDAH TERSEDIT
+---------------------------
+File db/custom.db sudah berisi 5 kegiatan contoh dari file Excel
+asli, data pejabat (KPA, PPTK, Bendahara, dll.) dan pengaturan
+instansi. Langsung bisa dipakai tanpa isi ulang.
+Mulai dari nol: hapus file db/custom.db, jalankan
+      npm run setup
+lalu jalankan lagi npm run dev.
+
+C. CARA MEMBUKA & MENCETAK DOKUMEN SPJ (F4)
+-------------------------------------------
+1. Klik menu  "Dokumen SPJ (F4)".
+2. Pilih KEGIATAN dan JENIS DOKUMEN pada strip di atas editor:
+   Cover SPJ, BAP, BAST, BA Pembayaran, BA Bermaterai,
+   Bukti Pengeluaran (Bend. 20), Lembar Disposisi,
+   Daftar Pembayaran, Surat Pernyataan PA/PPTK.
+3. Dokumen langsung terbuka di editor — tampilan di layar = hasil
+   cetak (WYSIWYG), ukuran kertas F4 sudah diatur otomatis.
+4. Sunting bebas: ketik, format, tabel, gambar — tersimpan
+   OTOMATIS ke basis data (lihat status "Tersimpan …" di kanan atas).
+5. Cetak / simpan PDF: tab "Berkas" -> "Cetak / PDF".
+   PADA DIALOG CETAK, agar hasil sesuai:
+   - Paper size : F4 / Folio (215 x 330 mm). Bila tidak ada, pilih
+                  Legal lalu sesuaikan, atau tambah ukuran kertas
+                  kustom 215 x 330 mm pada pengaturan printer.
+   - Scale      : 100% / Default (jangan "Fit to page").
+   - Margins    : Default.
+   - Hilangkan centang "Headers and footers" (nomor halaman sudah
+     disediakan aplikasi).
+6. Tombol "Perbarui dari Data" pada strip: generate ulang isi
+   dokumen dari data Data Pelatihan terkini.
+
+D. FITUR EDITOR DOKUMEN
+-----------------------
+- Ribbon tujuh tab: Berkas, Beranda, Sisipkan, Tata Letak,
+  Referensi, Tinjau, Tampilan — semua tombol berfungsi nyata.
+- Gaya Judul 1-4 -> panel navigasi isi + Daftar Isi otomatis.
+- Tabel: tambah/hapus baris-kolom, gabung/pecah sel, atur lebar,
+  garis, arsir, ulangi baris judul tiap halaman.
 - Gambar: unggah, ubah ukuran (proporsi terkunci), perataan.
 - Kop/kaki halaman + nomor halaman otomatis (beragam format).
-- Cari & ganti, periksa ejaan, hitung kata, menu klik-kanan,
-  pintasan: Ctrl+B/I/U, Ctrl+Z/Y, Ctrl+F/H, Ctrl+S, Ctrl+P, Ctrl+K.
-- TERSIMPAN OTOMATIS ke basis data (jeda 1,2 detik) — status di bar
-  atas. Riwayat versi: simpan manual, otomatis tiap 10 menit, dan
-  salinan "Sebelum pemulihan"; tidak pernah terhapus otomatis.
-- Berkas: Cetak / PDF (kertas F4 presisi), Ekspor Dokumen (DOCX),
-  Ekspor HTML/TXT, Impor DOCX/HTML/TXT.
-- Tombol "Perbarui dari Data" pada dokumen SPJ: generate ulang isi
-  dari data Data Pelatihan terkini.
+- Cari & ganti (Ctrl+F / Ctrl+H), hitung kata, periksa ejaan,
+  klik kanan untuk menu cepat.
+- Pintasan: Ctrl+B/I/U (format), Ctrl+Z/Y (urungkan/ulangi),
+  Ctrl+S (simpan versi), Ctrl+P (cetak), Ctrl+K (tautan).
+- Riwayat versi: tab "Tinjau" -> "Riwayat Versi" — simpan manual,
+  otomatis tiap 10 menit, salinan "Sebelum pemulihan"; tidak
+  pernah terhapus otomatis dan dapat dipulihkan kapan pun.
+- Berkas: Ekspor DOCX (dibuka di Word), Ekspor HTML/TXT,
+  Impor DOCX/HTML/TXT.
+- "Editor Dokumen" (menu utama) = kelola semua dokumen + buat
+  dokumen bebas baru (surat, SK, SOP, KAK/TOR, dsb).
 
-CATATAN CETAK F4
-----------------
-Saat mencetak, pilih kertas F4/Folio (215 x 330 mm) dan matikan
-"Headers and footers" bawaan browser agar nomor halaman aplikasi
-yang terpakai. Dokumen Daftar Pembayaran otomatis mendatar
-(330 x 215 mm).
+E. MENU UTAMA
+-------------
+1. Dashboard             ringkasan kegiatan & kelengkapan BA
+2. Data Pelatihan        formulir sumber data (setara sheet
+                         "Data Pelatihan" di file Excel)
+3. Dokumen SPJ (F4)      9 dokumen resmi otomatis -> editor
+4. Editor Dokumen        manajer seluruh dokumen & dokumen baru
+5. Pejabat & Pengaturan  pejabat, identitas instansi, program
 
-STRUKTUR DATA PENTING
----------------------
-- Tabel Kegiatan/Participant : sumber seluruh dokumen
-- Tabel SpjDoc/SpjDocVersion : dokumen editor + riwayat versi
-- API: /api/kegiatan, /api/documents, /api/documents/[id],
-  /api/documents/[id]/versions, /api/documents/[id]/restore,
-  /api/pejabat, /api/pengaturan
+F. STRUKTUR TEKNIS (untuk pengembang)
+-------------------------------------
+- Next.js 16 + TypeScript + Tailwind + Prisma (SQLite)
+- Basis data: db/custom.db (dipakai lewat .env: DATABASE_URL)
+- API: /api/kegiatan, /api/documents (+ /[id], /[id]/versions,
+  /[id]/restore), /api/pejabat, /api/pengaturan
+- Skema: prisma/schema.prisma — ubah lalu "npm run setup"
+- Produksi: npm run build lalu npm run start
