@@ -201,7 +201,7 @@ export default function Canvas({
         const table = td.closest("table") as HTMLTableElement | null;
         if (table) {
           const tr = td.parentElement!;
-          const idx = Array.from(tr.cells).indexOf(td);
+          const idx = Array.from((tr as HTMLTableRowElement).cells).indexOf(td);
           const cg = table.querySelector("colgroup");
           if (cg && cg.querySelectorAll("col")[idx]) {
             curTd = td;
@@ -225,7 +225,7 @@ export default function Canvas({
       if (!cg) return;
       ensureCol(table);
       const tr = td.parentElement!;
-      const idx = Array.from(tr.cells).indexOf(td);
+      const idx = Array.from((tr as HTMLTableRowElement).cells).indexOf(td);
       const col = cg.querySelectorAll("col")[idx] as HTMLElement;
       const startX = e.clientX;
       const startWmm = parseFloat(col.style.width) || td.offsetWidth / MM;

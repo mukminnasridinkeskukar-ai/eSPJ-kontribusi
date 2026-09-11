@@ -1,6 +1,7 @@
 // ============================================================
 // Editor Dokumen — mesin perintah: undo/redo, caret, format, sanitizer
 // ============================================================
+import { MM } from "./types";
 
 /* ---------------- Undo / Redo (snapshot) ---------------- */
 
@@ -111,7 +112,8 @@ export class UndoStack {
 /* ---------------- Eksekusi perintah format ---------------- */
 
 export function focusEditor(root: HTMLElement) {
-  if (!root.contains(document.getSelection()?.anchorNode)) root.focus();
+  const anchor = document.getSelection()?.anchorNode ?? null;
+  if (anchor === null || !root.contains(anchor)) root.focus();
 }
 
 export function exec(cmd: string, val?: string) {

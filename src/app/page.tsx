@@ -41,7 +41,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Kegiatan | null>(null);
-  const [editorSeed, setEditorSeed] = useState<{ kegiatanId: string; docKey: DocKey } | null>(null);
 
   const muat = useCallback(async () => {
     try {
@@ -157,19 +156,10 @@ export default function Home() {
             kegiatan={kegiatan}
             pengaturan={pengaturan}
             pejabat={pejabat}
-            onBukaEditor={(kegiatanId, docKey) => {
-              setEditorSeed({ kegiatanId, docKey });
-              setView("editor");
-            }}
+            onKelola={() => setView("editor")}
           />
         ) : view === "editor" ? (
-          <EditorView
-            kegiatan={kegiatan}
-            pengaturan={pengaturan}
-            pejabat={pejabat}
-            initialSeed={editorSeed}
-            onSeedConsumed={() => setEditorSeed(null)}
-          />
+          <EditorView kegiatan={kegiatan} pengaturan={pengaturan} pejabat={pejabat} />
         ) : (
           <PengaturanView
             pengaturan={pengaturan}

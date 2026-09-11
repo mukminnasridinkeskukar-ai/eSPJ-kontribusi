@@ -1,49 +1,81 @@
 ================================================================
- eSPJ-KONTRIBUSI — DINAS KESEHATAN KAB. KUTAI KARTANEGARA
- Termasuk EDITOR DOKUMEN PROFESIONAL (ala pengolah kata)
+eSPJ-Kontribusi — Dinas Kesehatan Kab. Kutai Kartanegara
+Aplikasi Pengelola SPJ Kontribusi Pelatihan + Editor Dokumen
 ================================================================
 
+ISI PAKET
+---------
+- src/          kode sumber aplikasi (Next.js 16 + TypeScript + Tailwind)
+- prisma/       skema basis data (SQLite)
+- db/custom.db  basis data siap pakai, berisi 5 kegiatan contoh dari
+                file Excel asli + data pejabat & pengaturan
+- public/       logo dan aset statis
+
 CARA MENJALANKAN
-1) Pasang Node.js 20+ (atau Bun).
-2) Buka terminal di folder ini, jalankan:
+----------------
+1. Pasang Node.js 20+ (atau Bun 1.1+).
+2. Buka terminal di folder paket ini, lalu:
      npm install        (atau: bun install)
-     npx prisma generate
+3. Jalankan aplikasi:
      npm run dev        (atau: bun run dev)
-3) Buka http://localhost:3000
+4. Buka browser ke alamat yang tampil (umumnya http://localhost:3000).
 
-FITUR UTAMA
-- Data Pelatihan  : formulir sumber tunggal (6 tab, 40 kolom).
-- Dokumen SPJ (F4): 9 dokumen otomatis (Cover, BAP, BAST, BA Bayar,
-  BA Bermaterai, Bukti Bend.20, Disposisi, Daftar Pembayaran,
-  Pernyataan PA). Tombol "Cetak F4" mencetak pada kertas F4/Folio.
-- Editor Dokumen  : sunting bebas seluruh dokumen seperti Word:
-  * Ribbon 7 tab (Berkas, Beranda, Sisipkan, Tata Letak, Referensi,
-    Tinjau, Tampilan)
-  * Format huruf/paragraf, daftar, gaya (Judul 1-4), kutipan
-  * Tabel lengkap: sisip baris/kolom, gabung/pisah sel, lebar kolom,
-    garis, warna sel, kepala tabel berulang
-  * Gambar: unggah, ubah ukuran (rasio terjaga), rata & keterangan
-  * Kop/kaki halaman, nomor halaman otomatis, halaman pertama berbeda
-  * Ukuran kertas F4/A4/A5/Letter/Legal/Kustom, orientasi, margin
-  * Penggaris + inden + tab stop, spasi baris & paragraf
-  * Daftar isi otomatis + perbarui, panel navigasi judul
-  * Cari & ganti, hitung kata, ejaan, pilih bahasa
-  * Simpan otomatis ke database (debounce), indikator tersimpan
-  * Riwayat versi + pulihkan (versi lama tak pernah dihapus)
-  * Ekspor: DOCX (Word asli), PDF (via dialog cetak), HTML, TXT
-  * Impor: DOCX, HTML, TXT
-  * Zoom 50-200%, pratinjau cetak, layar penuh, pintasan keyboard
-    (Ctrl+B/I/U/Z/Y/F/H/S/P/K, Tab di tabel pindah sel)
+Basis data otomatis dibuat/diperbarui saat pertama dijalankan
+(Prisma). File db/custom.db yang disertakan sudah berisi data contoh;
+hapus file tersebut bila ingin mulai kosong.
 
-DATABASE
-- SQLite siap pakai di db/custom.db (berisi 5 kegiatan contoh).
-- Struktur: prisma/schema.prisma (Kegiatan, Participant, Pejabat,
-  Pengaturan, SpjDoc, SpjDocVersion).
-- Cadangkan cukup dengan menyalin file db/custom.db.
+MENU UTAMA
+----------
+1. Dashboard            ringkasan seluruh kegiatan & kelengkapan BA
+2. Data Pelatihan       formulir sumber data (satuan setara sheet
+                        "Data Pelatihan" pada file Excel)
+3. Dokumen SPJ (F4)     9 dokumen resmi terisi otomatis dari data,
+                        langsung terbuka di Editor Dokumen:
+                        - Cover SPJ
+                        - BA Pemeriksaan Pekerjaan (BAP)
+                        - BA Serah Terima Pekerjaan (BAST)
+                        - BA Pembayaran
+                        - BA Pembayaran Bermaterai
+                        - Bukti Pengeluaran (Bend. 20)
+                        - Lembar Disposisi SPJ
+                        - Daftar Pembayaran Penggantian Uang
+                        - Surat Pernyataan PA/PPTK
+4. Editor Dokumen       kelola seluruh dokumen (SPJ & dokumen bebas),
+                        buat dokumen baru dari nol
+5. Pejabat & Pengaturan data pejabat, identitas instansi, program
 
-CATATAN CETAK
-- Ukuran kertas diatur pada dialog cetak sistem: pilih F4/Folio
-  215 x 330 mm (Daftar Pembayaran: 330 x 215 mm mendatar),
-  skala 100%, margin: None/Default tanpa header-footer browser.
-- Di Editor Dokumen, tombol "Cetak / PDF" sudah mengatur ukuran
-  halaman otomatis sesuai pengaturan dokumen.
+EDITOR DOKUMEN (ala pengolah kata)
+----------------------------------
+- Tampilan kertas WYSIWYG; ukuran kertas F4/A4/A5/Letter/Legal/kustom,
+  tegak/mendatar, lima preset margin, penggaris dengan inden & tab.
+- Ribbon tujuh tab: Berkas, Beranda, Sisipkan, Tata Letak, Referensi,
+  Tinjau, Tampilan — seluruh tombol berfungsi nyata.
+- Gaya paragraf (Judul 1-4) -> panel navigasi isi + Daftar Isi otomatis.
+- Tabel lengkap: tambah/hapus baris-kolom, gabung/pecah sel, atur
+  lebar, garis, arsir, ulangi baris judul tiap halaman.
+- Gambar: unggah, ubah ukuran (proporsi terkunci), perataan.
+- Kop/kaki halaman + nomor halaman otomatis (beragam format).
+- Cari & ganti, periksa ejaan, hitung kata, menu klik-kanan,
+  pintasan: Ctrl+B/I/U, Ctrl+Z/Y, Ctrl+F/H, Ctrl+S, Ctrl+P, Ctrl+K.
+- TERSIMPAN OTOMATIS ke basis data (jeda 1,2 detik) — status di bar
+  atas. Riwayat versi: simpan manual, otomatis tiap 10 menit, dan
+  salinan "Sebelum pemulihan"; tidak pernah terhapus otomatis.
+- Berkas: Cetak / PDF (kertas F4 presisi), Ekspor Dokumen (DOCX),
+  Ekspor HTML/TXT, Impor DOCX/HTML/TXT.
+- Tombol "Perbarui dari Data" pada dokumen SPJ: generate ulang isi
+  dari data Data Pelatihan terkini.
+
+CATATAN CETAK F4
+----------------
+Saat mencetak, pilih kertas F4/Folio (215 x 330 mm) dan matikan
+"Headers and footers" bawaan browser agar nomor halaman aplikasi
+yang terpakai. Dokumen Daftar Pembayaran otomatis mendatar
+(330 x 215 mm).
+
+STRUKTUR DATA PENTING
+---------------------
+- Tabel Kegiatan/Participant : sumber seluruh dokumen
+- Tabel SpjDoc/SpjDocVersion : dokumen editor + riwayat versi
+- API: /api/kegiatan, /api/documents, /api/documents/[id],
+  /api/documents/[id]/versions, /api/documents/[id]/restore,
+  /api/pejabat, /api/pengaturan

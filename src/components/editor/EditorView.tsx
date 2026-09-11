@@ -4,7 +4,6 @@
 // Editor Dokumen — manajer daftar dokumen + integrasi dokumen SPJ
 // ============================================================
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createRoot, flushSync } from "react-dom/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -12,17 +11,8 @@ import {
 } from "lucide-react";
 import type { Kegiatan, Pejabat, Pengaturan, DocKey } from "@/lib/espj-types";
 import { DOC_LIST } from "@/lib/espj-types";
-import { buildDocData } from "@/components/espj/doc-data";
-import DocCover from "@/components/espj/documents/DocCover";
-import DocBAP from "@/components/espj/documents/DocBAP";
-import DocBAST from "@/components/espj/documents/DocBAST";
-import DocBABayar from "@/components/espj/documents/DocBABayar";
-import DocBAMaterai from "@/components/espj/documents/DocBAMaterai";
-import DocBuktiPengeluaran from "@/components/espj/documents/DocBuktiPengeluaran";
-import DocDisposisi from "@/components/espj/documents/DocDisposisi";
-import DocDaftarPembayaran from "@/components/espj/documents/DocDaftarPembayaran";
-import DocPernyataanPA from "@/components/espj/documents/DocPernyataanPA";
 import { docSourceKey, DocListItem, defaultSettings } from "@/lib/editor/types";
+import { ensureSpjDoc } from "@/components/espj/seed-doc";
 import DocumentEditor from "./DocumentEditor";
 
 type Props = {
@@ -33,27 +23,12 @@ type Props = {
   onSeedConsumed?: () => void;
 };
 
-function DocComponent({ docKey, d }: { docKey: DocKey; d: ReturnType<typeof buildDocData> }) {
-  switch (docKey) {
-    case "cover": return <DocCover d={d} />;
-    case "bap": return <DocBAP d={d} />;
-    case "bast": return <DocBAST d={d} />;
-    case "baBayar": return <DocBABayar d={d} />;
-    case "baMaterai": return <DocBAMaterai d={d} />;
-    case "buktiPengeluaran": return <DocBuktiPengeluaran d={d} />;
-    case "disposisi": return <DocDisposisi d={d} />;
-    case "daftarPembayaran": return <DocDaftarPembayaran d={d} />;
-    case "pernyataanPA": return <DocPernyataanPA d={d} />;
-  }
-}
-
 export default function EditorView({ kegiatan, pengaturan, pejabat, initialSeed, onSeedConsumed }: Props) {
   const { toast } = useToast();
   const [docs, setDocs] = useState<DocListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [seeding, setSeeding] = useState<string | null>(null);
-  const hostRef = useRef<HTMLDivElement>(null);
 
   const loadDocs = useCallback(async () => {
     try {
@@ -87,107 +62,51 @@ export default function EditorView({ kegiatan, pengaturan, pejabat, initialSeed,
     pjMap.current = m;
   }, [pejabat]);
 
-  /** Render komponen dokumen menjadi HTML (untuk seed awal editor) */
-  const renderDocHtml = async (docKey: DocKey, k: Kegiatan): Promise<string | null> => {
-    if (!pengaturan) return null;
-    const d = buildDocData(k, pengaturan, pjMap.current);
-    let html: string;
-    try {
-      const { renderToStaticMarkup } = await import("react-dom/server");
-      html = renderToStaticMarkup(
-        <div style={{ fontFamily: "Tahoma, Verdana, Arial, sans-serif", fontSize: "9.5pt", lineHeight: 1.32 }}>
-          <DocComponent docKey={docKey} d={d} />
-        </div>
-      );
-    } catch (e) {
-      console.error("renderToStaticMarkup gagal, coba createRoot", e);
-      const host = hostRef.current;
-      if (!host) return null;
-      const root = createRoot(host);
-      try {
-        flushSync(() => {
-          root.render(
-            <div style={{ fontFamily: "Tahoma, Verdana, Arial, sans-serif", fontSize: "9.5pt", lineHeight: 1.32 }}>
-              <DocComponent docKey={docKey} d={d} />
-            </div>
-          );
-        });
-      } catch {
-        root.unmount();
-        return null;
-      }
-      html = host.innerHTML;
-      root.unmount();
-    }
-    // rapikan sumber gambar next/image → path asli
-    const wrap = document.createElement("div");
-    wrap.innerHTML = html;
-    wrap.querySelectorAll("img").forEach((img) => {
-      const src = img.getAttribute("src") || "";
-      if (src.includes("/_next/image?")) {
-        try {
-          const real = decodeURIComponent(new URL(src, location.href).searchParams.get("url") || "");
-          if (real) img.setAttribute("src", real);
-        } catch { /* biarkan */ }
-      }
-      img.removeAttribute("srcset");
-      img.removeAttribute("sizes");
-    });
-    const out = wrap.innerHTML;
-    wrap.innerHTML = "";
-    return out;
-  };
-
   const openOrCreateSpjDoc = useCallback(
     async (kegiatanId: string, docKey: DocKey) => {
-      const k = kegiatan.find((x) => x.id === kegiatanId);
-      if (!k || !pengaturan) {
+      if (!pengaturan) {
         toast({ title: "Data kegiatan belum siap", variant: "destructive" });
         return;
       }
       const source = docSourceKey(kegiatanId, docKey);
       const meta = DOC_LIST.find((x) => x.key === docKey)!;
-      // sudah pernah dibuat? → buka langsung
-      const existing = docs.find((x) => x.source === source);
-      if (existing) {
-        setActiveId(existing.id);
-        return;
-      }
       setSeeding(source);
       try {
-        const html = (await renderDocHtml(docKey, k)) ?? "<p><br></p>";
-        const settings = defaultSettings({
-          paper: "f4",
-          orientation: meta.orientasi,
-          docFont: "Tahoma",
-          docFontSize: 9.5,
-          docLineHeight: 1.32,
-          margins: { top: 12, right: 15, bottom: 12, left: 15 },
+        const res = await ensureSpjDoc({
+          kegiatanId,
+          docKey,
+          kegiatanList: kegiatan,
+          pengaturan,
+          pjMap: pjMap.current,
+          known: docs,
         });
-        const r = await fetch("/api/documents", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: `${meta.nama} — ${k.namaKegiatan.slice(0, 60)}`,
-            source,
-            kegiatanId,
-            docKey,
-            content: html,
-            settings: JSON.stringify(settings),
-          }),
-        });
-        if (!r.ok) throw new Error();
-        const doc = await r.json();
-        setDocs((prev) => [doc, ...prev]);
-        setActiveId(doc.id);
-        toast({ title: "Dokumen siap disunting", description: meta.nama });
+        if (!res) throw new Error();
+        if (res.created) {
+          const now = new Date().toISOString();
+          setDocs((prev) => [
+            {
+              id: res.id,
+              title: `${meta.nama}`,
+              source,
+              kegiatanId,
+              docKey,
+              settings: "{}",
+              createdAt: now,
+              updatedAt: now,
+              versions: 0,
+            },
+            ...prev.filter((x) => x.id !== res.id),
+          ]);
+          toast({ title: "Dokumen siap disunting", description: meta.nama });
+        }
+        setActiveId(res.id);
       } catch {
         toast({ title: "Gagal menyiapkan dokumen", variant: "destructive" });
       } finally {
         setSeeding(null);
       }
     },
-     
+
     [docs, kegiatan, pengaturan, toast]
   );
 
@@ -249,9 +168,6 @@ export default function EditorView({ kegiatan, pengaturan, pejabat, initialSeed,
 
   return (
     <div className="space-y-6">
-      {/* host render tersembunyi untuk seed */}
-      <div ref={hostRef} style={{ position: "absolute", left: -99999, top: 0, width: 700 }} aria-hidden />
-
       <div className="flex flex-wrap items-center gap-2">
         <div className="mr-auto">
           <h2 className="text-lg font-bold">Editor Dokumen</h2>

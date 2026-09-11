@@ -238,7 +238,7 @@ async function runXml(node: Node, fmt: RunFmt, ctx: Ctx): Promise<string> {
       for (const c of Array.from(el.childNodes)) out += await runXml(c, { ...fmt, u: true }, ctx);
       return out;
     }
-    case "img": return await imageRun(el, ctx);
+    case "img": return await imageRun(el as HTMLImageElement, ctx);
     default: {
       let out = "";
       for (const c of Array.from(el.childNodes)) out += await runXml(c, fmt, ctx);

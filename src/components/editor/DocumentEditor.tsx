@@ -39,9 +39,11 @@ import {
 import { PAPER_SIZES, MARGIN_PRESETS } from "@/lib/editor/types";
 
 export default function DocumentEditor({
-  docId, onClosed, onDocChanged,
+  docId, onClosed, onDocChanged, topStrip,
 }: {
   docId: string; onClosed: () => void; onDocChanged?: () => void;
+  /** strip opsional di atas editor (mis. pemilih dokumen SPJ) */
+  topStrip?: React.ReactNode;
 }) {
   const { toast } = useToast();
   // ---- state dasar ----
@@ -1365,6 +1367,7 @@ export default function DocumentEditor({
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px-40px)] bg-slate-200 -mx-4 sm:-mx-6 -my-6">
+      {topStrip}
       <Ribbon tab={tab} setTab={setTab} flags={ribbonFlags} actions={actions} />
       {findOpen && (
         <FindReplaceBar
@@ -1513,8 +1516,10 @@ export default function DocumentEditor({
             });
             if (!r.ok) throw new Error();
             const data = await r.json();
-            docRef.current = { ...docRef.current, ...data.doc };
-            applyDocToDom(docRef.current);
+            if (!docRef.current) throw new Error();
+            const merged: FullDoc = { ...docRef.current, ...data.doc };
+            docRef.current = merged;
+            applyDocToDom(merged);
             setTitle(data.doc.title);
             setDirty(false);
             await refreshVersions();
